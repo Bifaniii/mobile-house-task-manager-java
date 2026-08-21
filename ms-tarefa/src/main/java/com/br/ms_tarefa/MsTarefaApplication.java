@@ -1,13 +1,13 @@
-package com.br.ms_usuario;
+package com.br.ms_tarefa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MsUsuarioApplication {
+public class MsTarefaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsUsuarioApplication.class, args);
+		SpringApplication.run(MsTarefaApplication.class, args);
 	}
 
 }
