@@ -1,0 +1,18 @@
+# JWT
+jwt.secret=
+jwt.expiration-ms=
+
+# RabbitMQ
+spring.rabbitmq.host=
+spring.rabbitmq.port=
+spring.rabbitmq.username=
+spring.rabbitmq.password=
+
+app.rabbitmq.exchange=
+app.rabbitmq.routingkey.usuario-criado=
+
+spring.application.name=
+spring.datasource.url=
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
