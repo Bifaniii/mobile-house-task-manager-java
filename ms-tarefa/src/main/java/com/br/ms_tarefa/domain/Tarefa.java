@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +34,7 @@ public class Tarefa {
     private UUID criadoPor;
 
     @Column(name = "criado_em", nullable = false,  updatable = false)
-    private Instant criadoEm;
+    private ZonedDateTime criadoEm;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -40,7 +42,7 @@ public class Tarefa {
 
     //Método para o JPA preencher sozinho
     @PrePersist void aoCriar(){
-        this.criadoEm = Instant.now();
+        this.criadoEm = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
     }
 
     Tarefa(String titulo, String descricao, UUID usuarioId, UUID criadoPor) {
