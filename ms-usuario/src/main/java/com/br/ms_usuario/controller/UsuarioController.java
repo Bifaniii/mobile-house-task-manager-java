@@ -1,8 +1,10 @@
 package com.br.ms_usuario.controller;
 
 import com.br.ms_usuario.domain.Parentesco;
+import com.br.ms_usuario.domain.dto.EsqueciSenhaRequestDTO;
 import com.br.ms_usuario.domain.dto.LoginRequestDTO;
 import com.br.ms_usuario.domain.dto.LoginResponseDTO;
+import com.br.ms_usuario.domain.dto.RedefinirSenhaRequestDTO;
 import com.br.ms_usuario.domain.dto.UsuarioRequestDTO;
 import com.br.ms_usuario.domain.dto.UsuarioResponseDTO;
 import com.br.ms_usuario.service.UsuarioService;
@@ -33,6 +35,18 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO dto) {
         return ResponseEntity.ok(service.login(dto));
+    }
+
+    @PostMapping("/esqueci-senha")
+    public ResponseEntity<Void> esqueciSenha(@Valid @RequestBody EsqueciSenhaRequestDTO dto) {
+        service.esqueciSenha(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<Void> redefinirSenha(@Valid @RequestBody RedefinirSenhaRequestDTO dto) {
+        service.redefinirSenha(dto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

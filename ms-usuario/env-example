@@ -1,18 +1,19 @@
-# JWT
-jwt.secret=
-jwt.expiration-ms=
+# Copie este arquivo para ".env" (mesmo diretorio do docker-compose.yml) e preencha os valores.
+# O .env real nunca deve ser commitado (ja esta no .gitignore).
+
+# MySQL / datasource (DB_USERNAME e opcional, default: root)
+DB_USERNAME=
+DB_PASSWORD=
 
 # RabbitMQ
-spring.rabbitmq.host=
-spring.rabbitmq.port=
-spring.rabbitmq.username=
-spring.rabbitmq.password=
+RABBITMQ_USER=
+RABBITMQ_PASSWORD=
 
-app.rabbitmq.exchange=
-app.rabbitmq.routingkey.usuario-criado=
+# JWT - tem que ser IDENTICO ao usado pelo ms-tarefa, senao nenhum token valida entre os servicos
+JWT_SECRET=
 
-spring.application.name=
-spring.datasource.url=
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
+# Mail (recuperacao de senha) - ex.: smtp.gmail.com / 587 / senha de app do Gmail (nao e a senha normal da conta)
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=

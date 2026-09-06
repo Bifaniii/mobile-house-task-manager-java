@@ -30,6 +30,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 
+    @ExceptionHandler(TokenInvalidoOuExpiradoException.class)
+    public ResponseEntity<ApiErrorResponse> handleTokenInvalidoOuExpirado(TokenInvalidoOuExpiradoException ex) {
+        var body = new ApiErrorResponse(HttpStatus.BAD_REQUEST.value(), "Requisição inválida", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidacao(MethodArgumentNotValidException ex) {
         List<String> detalhes = ex.getBindingResult().getFieldErrors().stream()
