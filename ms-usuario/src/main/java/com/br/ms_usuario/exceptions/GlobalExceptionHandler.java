@@ -1,5 +1,7 @@
 package com.br.ms_usuario.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EmailJaCadastradoException.class)
     public ResponseEntity<ApiErrorResponse> handleEmailJaCadastrado(EmailJaCadastradoException ex) {
@@ -48,6 +52,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenerico(Exception ex) {
+        log.error("Erro interno não tratado", ex);
         var body = new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro interno",
                 "Ocorreu um erro inesperado");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
