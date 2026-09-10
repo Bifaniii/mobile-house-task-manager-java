@@ -11,6 +11,7 @@ import com.br.ms_usuario.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,5 +63,12 @@ public class UsuarioController {
     @GetMapping("/parentesco/{parentesco}")
     public ResponseEntity<List<UsuarioResponseDTO>> listarPorParentesco(@PathVariable Parentesco parentesco) {
         return ResponseEntity.ok(service.getUsuariosPorParentesco(parentesco));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('PAI', 'MAE')")
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+        service.deletarUsuario(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -21,9 +21,16 @@ public class CustomUserDetails implements UserDetails {
         return usuario.getId();
     }
 
+    public com.br.ms_usuario.domain.Parentesco getParentesco() {
+        return usuario.getParentesco();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_" + usuario.getParentesco().name())
+        );
     }
 
     @Override

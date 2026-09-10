@@ -81,6 +81,13 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    public void deletarUsuario(UUID id) {
+        if (!repository.existsById(id)) {
+            throw new UsuarioNaoEncontradoException(id);
+        }
+        repository.deleteById(id);
+    }
+
     public UsuarioResponseDTO registrar(UsuarioRequestDTO dto) {
         if (repository.existsByEmail(dto.email())) {
             throw new EmailJaCadastradoException(dto.email());
