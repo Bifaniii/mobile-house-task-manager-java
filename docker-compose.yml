@@ -33,7 +33,7 @@ services:
       retries: 10
 
   ms-usuario:
-    build: .
+    build: ./ms-usuario
     container_name: ms-usuario-app
     restart: unless-stopped
     depends_on:
@@ -57,6 +57,25 @@ services:
       SPRING_MAIL_PORT: ${MAIL_PORT}
       SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
       SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+
+  ms-tarefa:
+    build: ./ms-tarefa
+    container_name: ms-tarefa-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ms-usuario:
+        condition: service_started
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mstarefas?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-root}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      MS_USUARIOS_URL: http://ms-usuario:8080
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: 86400000
 
 volumes:
   mysql_data:
