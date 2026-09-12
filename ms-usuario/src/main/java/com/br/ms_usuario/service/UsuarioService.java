@@ -141,7 +141,8 @@ public class UsuarioService {
             try {
                 emailService.enviarEmailRedefinicaoSenha(usuario.getEmail(), resetToken.getToken());
             } catch (Exception e) {
-                log.warn("Não foi possível enviar email de redefinição de senha: {}", e.getMessage());
+                Throwable causa = e.getCause() != null ? e.getCause() : e;
+                log.warn("Não foi possível enviar email de redefinição de senha: {}", causa.getMessage());
             }
         });
         // Resposta sempre igual, exista ou não o email, pra não vazar quais emails estão cadastrados
