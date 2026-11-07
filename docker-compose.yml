@@ -1,21 +1,4 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-usuario
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: msusuarios
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq-usuario
@@ -37,16 +20,14 @@ services:
     container_name: ms-usuario-app
     restart: unless-stopped
     depends_on:
-      mysql:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     ports:
       - "8080:8080"
+    volumes:
+      - usuario_data:/app/data
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/msusuarios?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-root}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      DB_PATH: /app/data/ms-usuario.db
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
@@ -63,19 +44,18 @@ services:
     container_name: ms-tarefa-app
     restart: unless-stopped
     depends_on:
-      mysql:
-        condition: service_healthy
       ms-usuario:
         condition: service_started
     ports:
       - "8082:8082"
+    volumes:
+      - tarefa_data:/app/data
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mstarefas?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-root}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      DB_PATH: /app/data/ms-tarefa.db
       MS_USUARIOS_URL: http://ms-usuario:8080
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION_MS: 86400000
 
 volumes:
-  mysql_data:
+  usuario_data:
+  tarefa_data:

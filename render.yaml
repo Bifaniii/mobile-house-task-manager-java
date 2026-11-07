@@ -1,0 +1,44 @@
+# Blueprint do Render: New > Blueprint > selecione este repositorio.
+# Cria os dois microsservicos a partir dos Dockerfiles de cada pasta.
+services:
+  - type: web
+    name: ms-usuario
+    runtime: docker
+    plan: free
+    dockerfilePath: ./ms-usuario/Dockerfile
+    dockerContext: ./ms-usuario
+    buildFilter:
+      paths:
+        - ms-usuario/**
+    envVars:
+      # Gerado pelo Render e reaproveitado pelo ms-tarefa (precisa ser o mesmo nos dois)
+      - key: JWT_SECRET
+        generateValue: true
+      # SMTP da recuperacao de senha (preencha no painel)
+      - key: SPRING_MAIL_HOST
+        sync: false
+      - key: SPRING_MAIL_PORT
+        sync: false
+      - key: SPRING_MAIL_USERNAME
+        sync: false
+      - key: SPRING_MAIL_PASSWORD
+        sync: false
+
+  - type: web
+    name: ms-tarefa
+    runtime: docker
+    plan: free
+    dockerfilePath: ./ms-tarefa/Dockerfile
+    dockerContext: ./ms-tarefa
+    buildFilter:
+      paths:
+        - ms-tarefa/**
+    envVars:
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: ms-usuario
+          envVarKey: JWT_SECRET
+      # URL publica do ms-usuario, ex.: https://ms-usuario-xxxx.onrender.com
+      - key: MS_USUARIOS_URL
+        sync: false

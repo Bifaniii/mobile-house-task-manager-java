@@ -1,10 +1,6 @@
 # Copie este arquivo para ".env" (mesmo diretorio do docker-compose.yml) e preencha os valores.
 # O .env real nunca deve ser commitado (ja esta no .gitignore).
 
-# MySQL / datasource (DB_USERNAME e opcional, default: root)
-DB_USERNAME=
-DB_PASSWORD=
-
 # RabbitMQ
 RABBITMQ_USER=
 RABBITMQ_PASSWORD=
