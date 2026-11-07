@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        module: [ms-usuario, ms-tarefa]
+        module: [ms-usuario, ms-tarefa, ms-carteira]
     defaults:
       run:
         working-directory: ${{ matrix.module }}

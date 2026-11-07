@@ -37,6 +37,30 @@ class JwtServiceTest {
     }
 
     @Test
+    void familiaDe_deveExtrairAFamiliaDoToken() {
+        UUID familia = UUID.randomUUID();
+        String token = Jwts.builder()
+                .subject("ana@casa.com")
+                .claim("usuarioId", UUID.randomUUID().toString())
+                .claim("familiaId", familia.toString())
+                .expiration(new Date(System.currentTimeMillis() + 60_000))
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .compact();
+
+        assertThat(jwtService.familiaDe("Bearer " + token)).isEqualTo(familia);
+    }
+
+    @Test
+    void familiaDe_tokenAntigoSemFamiliaRecebe401() {
+        String token = tokenEmitidoPeloMsUsuario(SECRET, UUID.randomUUID(), 60_000);
+
+        assertThatThrownBy(() -> jwtService.familiaDe("Bearer " + token))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting(e -> ((ResponseStatusException) e).getStatusCode())
+                .isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
     void autenticado_deveRetornar401SemHeaderBearer() {
         assertUnauthorized(null);
         assertUnauthorized("Basic YWJjOjEyMw==");

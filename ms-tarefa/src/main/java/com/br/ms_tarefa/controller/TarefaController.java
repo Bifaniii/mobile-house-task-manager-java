@@ -1,5 +1,6 @@
 package com.br.ms_tarefa.controller;
 
+import com.br.ms_tarefa.domain.dto.ReprovarRequestDTO;
 import com.br.ms_tarefa.domain.dto.TarefaRequestDTO;
 import com.br.ms_tarefa.domain.dto.TarefaResponseDTO;
 import com.br.ms_tarefa.service.TarefaService;
@@ -97,9 +98,10 @@ public class TarefaController {
     @PatchMapping("/{id}/reprovar")
     public ResponseEntity<TarefaResponseDTO> reprovar(
             @PathVariable UUID id,
+            @Valid @RequestBody(required = false) ReprovarRequestDTO dto,
             @RequestHeader(value = "Authorization", required = false) String auth) {
 
-        return ResponseEntity.ok(service.reprovar(id, auth));
+        return ResponseEntity.ok(service.reprovar(id, dto == null ? null : dto.motivo(), auth));
     }
 
     @DeleteMapping("/{id}")

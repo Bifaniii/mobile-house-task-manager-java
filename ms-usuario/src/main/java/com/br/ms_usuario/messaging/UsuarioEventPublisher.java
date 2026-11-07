@@ -15,11 +15,18 @@ public class UsuarioEventPublisher {
     @Value("${app.rabbitmq.routingkey.usuario-criado}")
     private String routingKeyUsuarioCriado;
 
+    @Value("${app.rabbitmq.routingkey.usuario-removido:usuario.removido}")
+    private String routingKeyUsuarioRemovido;
+
     public UsuarioEventPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void publicarUsuarioCriado(UsuarioCriadoEvent evento) {
         rabbitTemplate.convertAndSend(exchange, routingKeyUsuarioCriado, evento);
+    }
+
+    public void publicarUsuarioRemovido(UsuarioRemovidoEvent evento) {
+        rabbitTemplate.convertAndSend(exchange, routingKeyUsuarioRemovido, evento);
     }
 }

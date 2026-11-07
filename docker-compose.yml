@@ -44,6 +44,8 @@ services:
     container_name: ms-tarefa-app
     restart: unless-stopped
     depends_on:
+      rabbitmq:
+        condition: service_healthy
       ms-usuario:
         condition: service_started
     ports:
@@ -53,9 +55,33 @@ services:
     environment:
       DB_PATH: /app/data/ms-tarefa.db
       MS_USUARIOS_URL: http://ms-usuario:8080
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION_MS: 86400000
+
+  ms-carteira:
+    build: ./ms-carteira
+    container_name: ms-carteira-app
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    volumes:
+      - carteira_data:/app/data
+    environment:
+      DB_PATH: /app/data/ms-carteira.db
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
 
 volumes:
   usuario_data:
   tarefa_data:
+  carteira_data:

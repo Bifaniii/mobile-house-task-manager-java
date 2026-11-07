@@ -1,5 +1,6 @@
 package com.br.ms_usuario.security;
 
+import com.br.ms_usuario.domain.Parentesco;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,13 +26,15 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(UUID usuarioId, String email) {
+    public String generateToken(UUID usuarioId, String email, UUID familiaId, Parentesco parentesco) {
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + expirationMs);
 
         return Jwts.builder()
                 .subject(email)
                 .claim("usuarioId", usuarioId.toString())
+                .claim("familiaId", familiaId.toString())
+                .claim("parentesco", parentesco.name())
                 .issuedAt(agora)
                 .expiration(expiracao)
                 .signWith(getKey(), SignatureAlgorithm.HS256)

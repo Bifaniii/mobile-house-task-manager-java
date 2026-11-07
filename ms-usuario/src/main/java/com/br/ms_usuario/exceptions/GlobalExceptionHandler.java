@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(RegraDeNegocioException.class)
+    public ResponseEntity<ApiErrorResponse> handleRegraDeNegocio(RegraDeNegocioException ex) {
+        var body = new ApiErrorResponse(ex.getStatus().value(), ex.getStatus().getReasonPhrase(), ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(body);
+    }
+
     @ExceptionHandler(EmailJaCadastradoException.class)
     public ResponseEntity<ApiErrorResponse> handleEmailJaCadastrado(EmailJaCadastradoException ex) {
         var body = new ApiErrorResponse(HttpStatus.CONFLICT.value(), "Conflito", ex.getMessage());

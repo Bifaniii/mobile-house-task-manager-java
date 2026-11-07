@@ -21,6 +21,10 @@ public class CustomUserDetails implements UserDetails {
         return usuario.getId();
     }
 
+    public UUID getFamiliaId() {
+        return usuario.getFamiliaId();
+    }
+
     public com.br.ms_usuario.domain.Parentesco getParentesco() {
         return usuario.getParentesco();
     }

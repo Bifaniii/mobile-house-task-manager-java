@@ -1,5 +1,7 @@
 # Blueprint do Render: New > Blueprint > selecione este repositorio.
-# Cria os dois microsservicos a partir dos Dockerfiles de cada pasta.
+# Cria os tres microsservicos a partir dos Dockerfiles de cada pasta.
+# O Render nao oferece RabbitMQ: crie um broker (ex.: plano gratuito do CloudAMQP) e use a URL amqps
+# dele em SPRING_RABBITMQ_ADDRESSES nos tres servicos. Sem isso, a carteira nao recebe os pontos.
 services:
   - type: web
     name: ms-usuario
@@ -14,6 +16,8 @@ services:
       # Gerado pelo Render e reaproveitado pelo ms-tarefa (precisa ser o mesmo nos dois)
       - key: JWT_SECRET
         generateValue: true
+      - key: SPRING_RABBITMQ_ADDRESSES
+        sync: false
       # SMTP da recuperacao de senha (preencha no painel)
       - key: SPRING_MAIL_HOST
         sync: false
@@ -41,4 +45,24 @@ services:
           envVarKey: JWT_SECRET
       # URL publica do ms-usuario, ex.: https://ms-usuario-xxxx.onrender.com
       - key: MS_USUARIOS_URL
+        sync: false
+      - key: SPRING_RABBITMQ_ADDRESSES
+        sync: false
+
+  - type: web
+    name: ms-carteira
+    runtime: docker
+    plan: free
+    dockerfilePath: ./ms-carteira/Dockerfile
+    dockerContext: ./ms-carteira
+    buildFilter:
+      paths:
+        - ms-carteira/**
+    envVars:
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: ms-usuario
+          envVarKey: JWT_SECRET
+      - key: SPRING_RABBITMQ_ADDRESSES
         sync: false

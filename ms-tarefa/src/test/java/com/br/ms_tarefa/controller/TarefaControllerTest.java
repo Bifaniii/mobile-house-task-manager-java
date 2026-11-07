@@ -48,7 +48,7 @@ class TarefaControllerTest {
     }
 
     private TarefaResponseDTO resposta(Status status) {
-        return new TarefaResponseDTO(tarefaId, "Lavar a louça", null, filhoId, UUID.randomUUID(), status);
+        return new TarefaResponseDTO(tarefaId, "Lavar a louça", null, filhoId, UUID.randomUUID(), status, null, 1, false, null, null);
     }
 
     @Test
@@ -93,6 +93,20 @@ class TarefaControllerTest {
         mockMvc.perform(patch("/tarefas/{id}/concluir", tarefaId).header("Authorization", AUTH))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("AGUARDANDO_APROVACAO"));
+    }
+
+    @Test
+    void reprovar_aceitaMotivoEFuncionaSemCorpo() throws Exception {
+        when(service.reprovar(tarefaId, "Faltou a panela", AUTH)).thenReturn(resposta(Status.EM_ANDAMENTO));
+        when(service.reprovar(tarefaId, null, AUTH)).thenReturn(resposta(Status.EM_ANDAMENTO));
+
+        mockMvc.perform(patch("/tarefas/{id}/reprovar", tarefaId)
+                        .header("Authorization", AUTH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"motivo\": \"Faltou a panela\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(patch("/tarefas/{id}/reprovar", tarefaId).header("Authorization", AUTH))
+                .andExpect(status().isOk());
     }
 
     @Test

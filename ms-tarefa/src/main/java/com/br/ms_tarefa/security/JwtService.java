@@ -22,21 +22,30 @@ public class JwtService {
 
 
     public UUID autenticado(String token) {
-    if (token == null || !token.startsWith("Bearer ")){
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token ausente");
+        return claimUuid(token, "usuarioId");
     }
 
-    try {
-        Claims claims = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token.substring(7))
-                .getPayload();
-
-        return UUID.fromString(claims.get("usuarioId", String.class));
-    } catch (Exception e){
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token ausente");
+    /** Tokens emitidos antes das famílias não têm essa informação: respondem 401 e a pessoa entra de novo. */
+    public UUID familiaDe(String token) {
+        return claimUuid(token, "familiaId");
     }
+
+    private UUID claimUuid(String token, String claim) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token ausente");
+        }
+
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token.substring(7))
+                    .getPayload();
+
+            return UUID.fromString(claims.get(claim, String.class));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token inválido ou expirado");
+        }
     }
 
 }

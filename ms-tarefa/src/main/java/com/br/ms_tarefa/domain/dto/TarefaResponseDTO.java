@@ -2,6 +2,7 @@ package com.br.ms_tarefa.domain.dto;
 
 import com.br.ms_tarefa.domain.Status;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public record TarefaResponseDTO(
@@ -10,5 +11,10 @@ public record TarefaResponseDTO(
         String descricao,
         UUID usuarioId,
         UUID criadoPor,
-        Status status
+        Status status,
+        Instant prazo,
+        int pontos,
+        boolean exigeFoto,
+        String motivoReprovacao,
+        UUID rotinaId
 ) { }

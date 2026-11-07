@@ -20,6 +20,9 @@ import java.util.UUID;
 @Table(name = "tarefas")
 public class Tarefa {
 
+    /** Tarefas criadas antes das famílias. O ms-usuario usa o mesmo id para as contas antigas. */
+    public static final UUID FAMILIA_LEGADA = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -40,9 +43,33 @@ public class Tarefa {
     @Column(nullable = false)
     private Status status = Status.PENDENTE;
 
+    // As colunas novas aceitam nulo: o ddl-auto do SQLite não adiciona NOT NULL em tabela com dados.
+    @Column(name = "familia_id")
+    private UUID familiaId;
+
+    private Instant prazo;
+
+    private Integer pontos = 1;
+
+    @Column(name = "exige_foto")
+    private Boolean exigeFoto = false;
+
+    @Column(name = "motivo_reprovacao", length = 500)
+    private String motivoReprovacao;
+
+    @Column(name = "rotina_id")
+    private UUID rotinaId;
+
+    @Column(name = "aviso_prazo_enviado")
+    private Boolean avisoPrazoEnviado = false;
+
     //Método para o JPA preencher sozinho
     @PrePersist void aoCriar(){
         this.criadoEm = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+    }
+
+    public int pontosOuPadrao() {
+        return pontos == null ? 1 : pontos;
     }
 
     Tarefa(String titulo, String descricao, UUID usuarioId, UUID criadoPor) {

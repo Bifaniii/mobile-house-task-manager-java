@@ -1,5 +1,6 @@
 package com.br.ms_usuario.security;
 
+import com.br.ms_usuario.domain.Parentesco;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +23,13 @@ class JwtServiceTest {
         ReflectionTestUtils.setField(jwtService, "expirationMs", 3_600_000L);
     }
 
+    private String token() {
+        return jwtService.generateToken(usuarioId, "ana@casa.com", UUID.randomUUID(), Parentesco.MAE);
+    }
+
     @Test
     void generateToken_deveCarregarEmailEIdDoUsuario() {
-        String token = jwtService.generateToken(usuarioId, "ana@casa.com");
+        String token = token();
 
         assertThat(jwtService.extractEmail(token)).isEqualTo("ana@casa.com");
         assertThat(jwtService.extractUsuarioId(token)).isEqualTo(usuarioId);
@@ -32,7 +37,7 @@ class JwtServiceTest {
 
     @Test
     void isTokenValido_deveSerFalsoParaOutroEmail() {
-        String token = jwtService.generateToken(usuarioId, "ana@casa.com");
+        String token = token();
 
         assertThat(jwtService.isTokenValido(token, "ana@casa.com")).isTrue();
         assertThat(jwtService.isTokenValido(token, "outro@casa.com")).isFalse();
@@ -41,7 +46,7 @@ class JwtServiceTest {
     @Test
     void tokenExpirado_deveSerRejeitado() {
         ReflectionTestUtils.setField(jwtService, "expirationMs", -1_000L);
-        String token = jwtService.generateToken(usuarioId, "ana@casa.com");
+        String token = token();
 
         assertThatThrownBy(() -> jwtService.extractEmail(token)).isInstanceOf(ExpiredJwtException.class);
     }

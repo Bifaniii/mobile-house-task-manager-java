@@ -33,5 +33,8 @@ public class Usuario {
     @Column(name = "parentesco")
     private Parentesco parentesco;
 
+    // Sem NOT NULL no banco: contas antigas ganham a família na migração da inicialização.
+    @Column(name = "familia_id")
+    private UUID familiaId;
 
 }
