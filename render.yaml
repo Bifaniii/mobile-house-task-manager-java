@@ -18,6 +18,9 @@ services:
         generateValue: true
       - key: SPRING_RABBITMQ_ADDRESSES
         sync: false
+      # Origens da versao web do app (o padrao e http://localhost:8081)
+      - key: APP_CORS_ORIGENS
+        sync: false
       # SMTP da recuperacao de senha (preencha no painel)
       - key: SPRING_MAIL_HOST
         sync: false
@@ -48,6 +51,9 @@ services:
         sync: false
       - key: SPRING_RABBITMQ_ADDRESSES
         sync: false
+      # Origens da versao web do app (o padrao e http://localhost:8081)
+      - key: APP_CORS_ORIGENS
+        sync: false
 
   - type: web
     name: ms-carteira
@@ -65,4 +71,7 @@ services:
           name: ms-usuario
           envVarKey: JWT_SECRET
       - key: SPRING_RABBITMQ_ADDRESSES
+        sync: false
+      # Origens da versao web do app (o padrao e http://localhost:8081)
+      - key: APP_CORS_ORIGENS
         sync: false
